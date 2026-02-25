@@ -6,6 +6,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -39,5 +45,32 @@ public class SecurityConfig {
          **/
         security.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return security.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+
+    // here we are creating an in memory user details service and adding two users to it one with the role of USER
+    // and another with the role of ADMIN
+    // we will take this to next level by having users in the database
+    @Bean
+    public UserDetailsService userDetailsService() {
+
+        UserDetails user = User
+            .withUsername("teja")
+            .password(passwordEncoder().encode("t@123"))
+            .roles("USER")
+            .build();
+
+        UserDetails admin = User
+            .withUsername("admin")
+            .password(passwordEncoder().encode("a@123"))
+            .roles("ADMIN")
+            .build();
+
+        return new InMemoryUserDetailsManager(user,admin);
     }
 }

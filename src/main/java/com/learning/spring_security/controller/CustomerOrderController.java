@@ -28,13 +28,13 @@ public class CustomerOrderController {
         return customerOrderService.getAllCustomerOrders();
     }
 
-    @GetMapping("tracking")
-    public CustomerOrder findByTrackingNumber(@RequestParam String trackingNumber) {
-        return customerOrderService.findByTrackingNumber(trackingNumber);
+    @GetMapping("orderId")
+    public CustomerOrder findByOrderId(@RequestParam String orderId) {
+        return customerOrderService.findByOrderId(orderId);
     }
 
     @PostMapping
-    public boolean createCustomerOrder(@RequestBody CustomerOrder customerOrder) {
+    public CustomerOrder createCustomerOrder(@RequestBody CustomerOrder customerOrder) {
         return customerOrderService.addCustomerOrder(customerOrder);
     }
 }
