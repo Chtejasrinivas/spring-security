@@ -3,6 +3,7 @@ package com.learning.spring_security.controller;
 import com.learning.spring_security.model.CustomerOrder;
 import com.learning.spring_security.service.CustomerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,16 +25,19 @@ public class CustomerOrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
     public List<CustomerOrder> getAllCustomerOrders() {
         return customerOrderService.getAllCustomerOrders();
     }
 
     @GetMapping("orderId")
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
     public CustomerOrder findByOrderId(@RequestParam String orderId) {
         return customerOrderService.findByOrderId(orderId);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     public CustomerOrder createCustomerOrder(@RequestBody CustomerOrder customerOrder) {
         return customerOrderService.addCustomerOrder(customerOrder);
     }
