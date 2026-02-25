@@ -41,4 +41,9 @@ public class CustomerOrderController {
     public CustomerOrder createCustomerOrder(@RequestBody CustomerOrder customerOrder) {
         return customerOrderService.addCustomerOrder(customerOrder);
     }
+
+    @GetMapping("my-orders")
+    public List<CustomerOrder> getAllCustomerOrdersBasedOnUserNameFromLogin() {
+        return customerOrderService.getAllCustomerOrdersBasedOnUserNameFromLogin();
+    }
 }
