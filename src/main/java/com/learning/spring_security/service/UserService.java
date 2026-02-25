@@ -1,5 +1,6 @@
 package com.learning.spring_security.service;
 
+import com.learning.spring_security.config.PasswordEncoder;
 import com.learning.spring_security.model.User;
 import com.learning.spring_security.model.UserPrincipal;
 import com.learning.spring_security.repo.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,11 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public User addUser(User user) {
+        passwordEncoder.setPasswordStrength(12);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -27,9 +33,10 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
+    public @NonNull UserDetails loadUserByUsername(@NonNull String username)
+        throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username);
-        if(user == null) {
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         } else
             return new UserPrincipal(user);
