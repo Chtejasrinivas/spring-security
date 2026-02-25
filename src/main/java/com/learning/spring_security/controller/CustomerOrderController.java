@@ -4,12 +4,16 @@ import com.learning.spring_security.model.CustomerOrder;
 import com.learning.spring_security.service.CustomerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("orders")
 public class CustomerOrderController {
 
     private final CustomerOrderService customerOrderService;
@@ -19,13 +23,18 @@ public class CustomerOrderController {
         this.customerOrderService = customerOrderService;
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public List<CustomerOrder> getAllCustomerOrders() {
         return customerOrderService.getAllCustomerOrders();
     }
 
-    @GetMapping("/orders/tracking")
+    @GetMapping("tracking")
     public CustomerOrder findByTrackingNumber(@RequestParam String trackingNumber) {
         return customerOrderService.findByTrackingNumber(trackingNumber);
+    }
+
+    @PostMapping
+    public boolean createCustomerOrder(@RequestBody CustomerOrder customerOrder) {
+        return customerOrderService.addCustomerOrder(customerOrder);
     }
 }
